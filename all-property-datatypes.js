@@ -1,5 +1,5 @@
-export default function( apiClient ) {
-	[
+export default async function( apiClient ) {
+	const datatypes = [
 		'commons-media',
 		'external-id',
 		'geo-shape',
@@ -16,12 +16,13 @@ export default function( apiClient ) {
 		'wikibase-item',
 		'wikibase-property',
 		'wikibase-lexeme',
-	].forEach( async ( datatype ) => {
+	];
+	for ( const datatype of datatypes ) {
 		await apiClient.createProperty( {
 			datatype,
 			labels: {
 				en: { language: 'en', value: `${ datatype } property` },
 			},
 		} );
-	} );
+	}
 };
