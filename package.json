@@ -1,0 +1,24 @@
+{
+  "name": "wikibase-seed-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wmde/wikibase-seed-data.git"
+  },
+  "author": "",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/wmde/wikibase-seed-data/issues"
+  },
+  "homepage": "https://github.com/wmde/wikibase-seed-data#readme",
+  "dependencies": {
+    "meow": "^9.0.0",
+    "node-fetch": "^2.6.1"
+  }
+}

@@ -1,0 +1,16 @@
+version: "2"
+services:
+  node:
+    image: "node:14"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+      - MW_SERVER
+      - MW_SCRIPT_PATH
+    volumes:
+      - ./:/home/node/app
+    expose:
+      - "8081"
+    command: "npm start"
+    network_mode: host
