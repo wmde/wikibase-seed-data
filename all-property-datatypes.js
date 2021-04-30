@@ -1,4 +1,6 @@
-export default async function( apiClient ) {
+import EntityCreationError from './src/EntityCreationError.js';
+
+export default function( apiClient ) {
 	const datatypes = [
 		'commons-media',
 		'external-id',
@@ -17,12 +19,21 @@ export default async function( apiClient ) {
 		'wikibase-property',
 		'wikibase-lexeme',
 	];
-	for ( const datatype of datatypes ) {
-		await apiClient.createProperty( {
-			datatype,
-			labels: {
-				en: { language: 'en', value: `${ datatype } property` },
-			},
-		} );
-	}
+	datatypes.forEach( async ( datatype ) => {
+		try {
+			const id = await apiClient.createProperty( {
+				datatype,
+				labels: {
+					en: { language: 'en', value: `${ datatype } property` },
+				},
+			} );
+			console.log( `Created ${ id }!` );
+		} catch( e ) {
+			if ( e instanceof EntityCreationError ) {
+				console.log( e.message )
+			} else {
+				throw e;
+			}
+		}
+	} );
 };
