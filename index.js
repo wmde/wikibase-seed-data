@@ -1,5 +1,7 @@
 import meow from 'meow';
 import fetch from 'node-fetch';
+import RequestError from './src/RequestError.js';
+import EntityCreationError from './src/EntityCreationError.js';
 
 const cli = meow( {
 	flags: {
@@ -11,10 +13,13 @@ const cli = meow( {
 	}
 } );
 
+const TIME_BETWEEN_REQUESTS = 20;
+
 class ApiClient {
 
 	constructor( apiUrl ) {
 		this.apiUrl = apiUrl;
+		this.pendingRequests = [];
 	}
 
 	async createItem( entitySerialization ) {
@@ -35,21 +40,44 @@ class ApiClient {
 			token: '+\\'
 		} );
 
-		let response;
+		let request;
 		try {
-			response = await ( await fetch( url, {
+			request = this._queueRequest( async () => await ( await fetch( url, {
 				method: 'POST',
 				body: payload,
-			} ) ).json();
+			} ) ).json() );
 		} catch( e ) {
 			console.log( 'Request to create entity failed: ' + e.message );
+			throw new RequestError( e.message );
 		}
 
+		const response = await request;
 		if( response && response.success !== 1 ) {
 			console.log( `Server failed to create entity: ${ response.error.info }` );
+			throw new EntityCreationError( response.error.info );
 		}
 
-		return response;
+		return response.entity.id;
+	}
+
+	async _queueRequest( requestCallback ) {
+		if( this.pendingRequests.length === 0 ) {
+			const request = requestCallback();
+			this.pendingRequests.push( request )
+			return request;
+		}
+
+		const request = new Promise( ( async ( resolve ) => {
+			await Promise.all( [ ...this.pendingRequests ] );
+
+			setTimeout( () => {
+				resolve( requestCallback() );
+			}, TIME_BETWEEN_REQUESTS )
+		} ) );
+
+		this.pendingRequests.push( request );
+
+		return request;
 	}
 }
 
