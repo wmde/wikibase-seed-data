@@ -79,6 +79,37 @@ class ApiClient {
 
 		return request;
 	}
+
+	async getPropertyByDataType( datatype ){
+		// use wb-searchentities to find property by label
+		// if property not there
+		// make property
+		// return propertyId
+	}
+
+	_findPropertyByLabel( label ){
+		const url = new URL( this.apiUrl );
+		const payload = new URLSearchParams( {
+			action: 'wbsearchentities',
+			type: 'property',
+			search: label,
+			format: 'json',
+			token: '+\\'
+		} );
+
+		let request;
+		try {
+			request = this._queueRequest( async () => await ( await fetch( url, {
+				method: 'POST',
+				body: payload,
+			} ) ).json() );
+		} catch( e ) {
+			console.log( 'Request to create entity failed: ' + e.message );
+			throw new RequestError( e.message );
+		}
+
+
+	}
 }
 
 const apiClient = new ApiClient(process.env.MW_SERVER + process.env.MW_SCRIPT_PATH + '/api.php');
