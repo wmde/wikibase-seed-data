@@ -1,5 +1,4 @@
 import EntityCreationError from './src/EntityCreationError.js';
-import propertyWithDatatype from './entityTemplates/propertyWithDatatype.js';
 
 export default function( apiClient ) {
 	const datatypes = [
