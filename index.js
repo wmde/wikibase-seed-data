@@ -2,6 +2,8 @@ import meow from 'meow';
 import fetch from 'node-fetch';
 import RequestError from './src/RequestError.js';
 import EntityCreationError from './src/EntityCreationError.js';
+import buildPropertySampleLabelForDatatype from './src/buildPropertySampleLabelForDatatype.js';
+import propertyWithDatatype from './entityTemplates/propertyWithDatatype.js';
 
 const cli = meow( {
 	flags: {
@@ -80,35 +82,41 @@ class ApiClient {
 		return request;
 	}
 
-	async getPropertyByDataType( datatype ){
-		// use wb-searchentities to find property by label
-		// if property not there
-		// make property
-		// return propertyId
+	async findOrCreatePropertyByDataType( datatype ){
+		const label = buildPropertySampleLabelForDatatype( datatype )
+		const propertyId = this._findPropertyByLabel( label )
+		if ( propertyId !== null ) {
+			return propertyId
+		} else {
+			return await this.createProperty( propertyWithDatatype( datatype ) )
+		}
 	}
 
-	_findPropertyByLabel( label ){
+	async _findPropertyByLabel( label ){
 		const url = new URL( this.apiUrl );
 		const payload = new URLSearchParams( {
 			action: 'wbsearchentities',
 			type: 'property',
 			search: label,
 			format: 'json',
-			token: '+\\'
+			language: 'en'
 		} );
+
+		url.search = payload
 
 		let request;
 		try {
 			request = this._queueRequest( async () => await ( await fetch( url, {
-				method: 'POST',
-				body: payload,
+				method: 'GET',
 			} ) ).json() );
 		} catch( e ) {
-			console.log( 'Request to create entity failed: ' + e.message );
+			console.log( 'Request to lookup property by label failed: ' + e.message );
 			throw new RequestError( e.message );
 		}
+		const response = await request
 
-
+		const property = response.search.find( p => p.label === label )
+		return property ? property.id : null
 	}
 }
 

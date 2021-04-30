@@ -1,4 +1,5 @@
 import EntityCreationError from './src/EntityCreationError.js';
+import propertyWithDatatype from './entityTemplates/propertyWithDatatype.js';
 
 export default function( apiClient ) {
 	const datatypes = [
@@ -21,13 +22,8 @@ export default function( apiClient ) {
 	];
 	datatypes.forEach( async ( datatype ) => {
 		try {
-			const id = await apiClient.createProperty( {
-				datatype,
-				labels: {
-					en: { language: 'en', value: `${ datatype } property` },
-				},
-			} );
-			console.log( `Created ${ id }!` );
+			const id = await apiClient.findOrCreatePropertyByDataType( datatype );
+			console.log( `Created or already found ${ id } with datatype ${ datatype }!` );
 		} catch( e ) {
 			if ( e instanceof EntityCreationError ) {
 				console.log( e.message )
