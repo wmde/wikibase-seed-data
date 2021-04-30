@@ -84,7 +84,7 @@ class ApiClient {
 
 	async findOrCreatePropertyByDataType( datatype ){
 		const label = buildPropertySampleLabelForDatatype( datatype )
-		const propertyId = this._findPropertyByLabel( label )
+		const propertyId = await this._findPropertyByLabel( label )
 		if ( propertyId !== null ) {
 			return propertyId
 		} else {
