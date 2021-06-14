@@ -15,7 +15,7 @@ const cli = meow( {
 	}
 } );
 
-const TIME_BETWEEN_REQUESTS = 20;
+const TIME_BETWEEN_REQUESTS = 0;
 
 class ApiClient {
 
