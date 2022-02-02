@@ -11,3 +11,4 @@ MW_SERVER=http://default.web.mw.localhost:8080/ MW_SCRIPT_PATH=/mediawiki docker
 
 * `all-property-datatypes.js` - creates a Property for every datatype supported by the Wikibase
 * `item-with-all-statements.js` - creates an Item with statements for ~~every supported datatype~~ datatypes string and time (but in the future it'll hopefully support all of them)
+* `large-item.js` - creates a large Item with many strings and external identifier statements. Append `--random-label` (after the `--script`/`-s` flag), to randomize the label, so that multiple items can be created.

@@ -82,13 +82,13 @@ class ApiClient {
 		return request;
 	}
 
-	async findOrCreatePropertyByDataType( datatype ){
-		const label = buildPropertySampleLabelForDatatype( datatype )
-		const propertyId = await this._findPropertyByLabel( label )
+	async findOrCreatePropertyByDataType( datatype, index = null ) {
+		const label = buildPropertySampleLabelForDatatype( datatype, index );
+		const propertyId = await this._findPropertyByLabel( label );
 		if ( propertyId !== null ) {
-			return propertyId
+			return propertyId;
 		} else {
-			return await this.createProperty( propertyWithDatatype( datatype ) )
+			return await this.createProperty( propertyWithDatatype( datatype, index ) );
 		}
 	}
 
