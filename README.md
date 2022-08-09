@@ -1,5 +1,12 @@
 # wikibase-seed-data
 
+## Setup
+
+Run `npm install` to install dependencies, e.g.:
+```bash
+docker-composer run node npm install
+```
+
 ## Usage
 
 Run `npm run seed` and pass it the `MW_SERVER` and `MW_SCRIPT_PATH` environment variables and a seed data script via the `--script` or `-s` flag, e.g.
