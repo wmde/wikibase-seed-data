@@ -4,7 +4,7 @@
 
 Run `npm install` to install dependencies, e.g.:
 ```bash
-docker-composer run node npm install
+docker-compose run node npm install
 ```
 
 ## Usage
